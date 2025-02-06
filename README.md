@@ -53,7 +53,7 @@ cd frontend
 npm i
 npm run serve
 ```
-To use as a web component in another project, see the [**README.md**](https://github.com/syoung8002/review/blob/main/frontend/README.md) file in the frontend directory.
+To use as a web component in another project, see the [**README.md**](https://github.com/msa-ez/pbc-review/blob/main/frontend/README.md) file in the frontend directory.
 
 
 ## Test by UI
