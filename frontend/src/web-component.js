@@ -10,7 +10,7 @@ Vue.use(Managing);
 Vue.use(Vuetify);
 
 const axios = require("axios").default;
-axios.backend = "https://8098-kyusook-hailingservice-0kkueehijtx.ws-us117.gitpod.io";
+axios.backend = "http://localhost:8058";    // API Gateway URL
 if (axios.backend) axios.backendUrl = new URL(axios.backend);
 axios.fixUrl = function(original) {
     if(!axios.backend && original.indexOf("/")==0) {

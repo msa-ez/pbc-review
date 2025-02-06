@@ -1,5 +1,5 @@
 server:
-  port: 8098
+  port: 8058
 
 ---
 
@@ -10,11 +10,11 @@ spring:
 #<<< API Gateway / Routes
       routes:
         - id: review
-          uri: http://localhost:8092
+          uri: http://localhost:8052
           predicates:
             - Path=/reviews/**
         - id: frontend
-          uri: http://localhost:8090
+          uri: http://localhost:8050
           predicates:
             - Path=/**
 #>>> API Gateway / Routes
