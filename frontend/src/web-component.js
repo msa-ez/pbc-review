@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import Managing from "./components";
-import Vuetify from "vuetify/lib";
 import 'vuetify/dist/vuetify.min.css';
+import Vuetify from "vuetify/lib";
+import Managing from "./components";
 
 Vue.config.productionTip = false;
 require('./GlobalStyle.css');
@@ -10,7 +10,7 @@ Vue.use(Managing);
 Vue.use(Vuetify);
 
 const axios = require("axios").default;
-axios.backend = "http://localhost:8088";
+axios.backend = "https://8098-kyusook-hailingservice-0kkueehijtx.ws-us117.gitpod.io";
 if (axios.backend) axios.backendUrl = new URL(axios.backend);
 axios.fixUrl = function(original) {
     if(!axios.backend && original.indexOf("/")==0) {
