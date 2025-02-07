@@ -10,8 +10,8 @@ Vue.use(Managing);
 Vue.use(Vuetify);
 
 const axios = require("axios").default;
-axios.backend = "http://localhost:8058";    // API Gateway URL
-if (axios.backend) axios.backendUrl = new URL(axios.backend);
+// axios.backend = "";
+// if (axios.backend) axios.backendUrl = new URL(axios.backend);
 axios.fixUrl = function(original) {
     if(!axios.backend && original.indexOf("/")==0) {
         return original;

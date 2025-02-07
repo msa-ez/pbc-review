@@ -43,7 +43,7 @@ mvn spring-boot:run
 ## Test by API
 - review
 ```
-http :8088/reviews id="id" itemId="itemId" rating="rating" text="text" userId="userId" userImg="userImg"
+http :8058/reviews itemId="itemId" rating="rating" text="text" userId="userId" userImg="userImg"
 ```
 
 
@@ -53,7 +53,7 @@ cd frontend
 npm i
 npm run serve
 ```
-To use as a web component in another project, see the [**README.md**](https://github.com/msa-ez/pbc-review/blob/main/frontend/README.md) file in the frontend directory.
+### ※ To use as a web component in another project, see the [**README.md**](https://github.com/msa-ez/pbc-review/blob/main/frontend/README.md) in the frontend directory.
 
 
 ## Test by UI

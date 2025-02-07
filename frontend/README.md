@@ -29,24 +29,46 @@ npm run lint
 ## How to use web components for other projects
 
 ### Before Using Web Components
-Backend micro-services, API Gateway, and review-app Web Component must be running.
-- If the API Gateway URL has changed, you must modify axios.backend to the changed url in web-component.js to build and run the web component again.
+Review backend microservice and review-app Web Component must be running.
+- You must register a review backend microservice with the API gateway that you are currently running.
 ```
--- web-component.js
-// ... existing code
-const axios = require("axios").default;
-axios.backend = "http://localhost:8058";    // API Gateway URL
-// ... existing code
+-- Example of API Gateway application.yml
+server:
+  port: 8088
 
--- terminal
-npm run build
-npm run start
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+#<<< Add review backend microservice here
+        - id: review-backend
+          uri: http://localhost:8052
+          predicates:
+            - Path=/reviews/**
+#>>> Warning: The review backend must not duplicate with other service paths.
+        - id: other-services
+          uri: http://other-services:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
 ```
 
 
 ### Load built web component files and required libraries
 - Add the libraries, Vuetify, VueJs, to the &lt;head&gt; tag.
-- Add the built review app web component to the &lt;body&gt; tag.
+- Add the built review-app web component to the &lt;body&gt; tag.
 ```
 -- index.html
 <head>
@@ -63,12 +85,14 @@ npm run start
 </body>
 ```
 
-### 2. Using Example
+### Using Example
 Built Web Components can be used as HTML tags.
+- The component name and props you want to use must be written in a kebab case.
+- If the prop type you want to deliver is JSON Object, you must convert it to a string and deliver it.
 ```
 <template>
     <review-app>
-        <!-- The JSON Objectt must be converted to a string using JSON.stringify() -->
+        <!-- The JSON Object must be converted to a string using JSON.stringify() -->
         <review-review-cards
             :value="JSON.stringify(reviewData)"
             :show-reviews="showReviews" 
@@ -93,6 +117,3 @@ export default {
 }
 </script>
 ```
-- The component name and props you want to use must be written in a kebab case.
-- If the prop type you want to deliver is JSON Object, you must convert it to a string and deliver it.
-
