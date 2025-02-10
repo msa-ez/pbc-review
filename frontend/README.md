@@ -98,6 +98,7 @@ Built Web Components can be used as HTML tags.
             :show-reviews="showReviews" 
             :show-review-input="showReviewInput" 
             :detail-mode="detailMode"
+            :average-mode="averageMode"
         ></review-review-cards>
     </review-app>
 </template>

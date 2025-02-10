@@ -7,6 +7,7 @@
                     :show-reviews="showReviews" 
                     :show-review-input="showReviewInput" 
                     :detail-mode="detailMode"
+                    :average-mode="averageMode"
                 ></review-review-cards>
             </v-container>
         </v-main>
@@ -31,7 +32,8 @@ export default {
             componentName: "review-review-manager",
             showReviews: true,
             showReviewInput: true,
-            detailMode: true
+            detailMode: true,
+            averageMode: true
         }
     },
     mounted() {

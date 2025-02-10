@@ -9,7 +9,7 @@
             </v-row>
         </div>
         <div v-else>
-            <div class="pa-4 d-flex justify-center">
+            <div v-if="averageMode" class="pa-4 d-flex justify-center">
                 <div class="text-center mr-8">
                     <div style="font-size:64px; font-weight: 500;">{{ averageRating }}</div>
                     <v-rating
@@ -89,6 +89,10 @@ export default {
         },
         //detailMode (false : 별점 평균과 등록된 리뷰만 표시, true : showReviews, showReviewInput 활성화시 디테일 UI로 변경)
         detailMode: {
+            type: Boolean,
+            default: false, // 기본값 설정
+        },
+        averageMode: {
             type: Boolean,
             default: false, // 기본값 설정
         },
