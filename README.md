@@ -44,6 +44,15 @@ mvn spring-boot:run
 - review
 ```
 http :8058/reviews itemId="itemId" rating="rating" text="text" userId="userId" userImg="userImg"
+
+-- Request parameters for the review
+{
+    "itemId": "Item Id", // ID of the item to review
+    "rating": 5, // rating
+    "text": "Very good", // review content
+    "userId": "User Id", // ID of the user writing the review
+    "userImg": "https://raw.githubusercontent.com/msa-ez/pbc-review/refs/heads/main/frontend/src/assets/icon/user.svg" // image of the user writing the review
+}
 ```
 
 
