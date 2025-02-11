@@ -107,13 +107,15 @@ Built Web Components can be used as HTML tags.
 export default {
     name: "App",
     data: () => ({
-        reviewData: {`
+        // Review data
+        reviewData: {
             'rating': 5,
             'content': 'Very Good'
         },
-        showReviews: true,
-        showReviewInput: true,
-        detailMode: true
+        showReviews: true,  // Show registered reviews
+        showReviewInput: true,  // Activate review registration UI
+        detailMode: true, // Detailed view (false: shows average rating and registered reviews only, true: changes to detailed UI when showReviews and showReviewInput are activated)
+        averageMode: true // Show overall review average
     })
 }
 </script>
