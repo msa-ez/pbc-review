@@ -1,5 +1,6 @@
 <template>
     <div>
+        <v-divider class="mb-2 mt-2"></v-divider>
         <div v-if="!detailMode">
             <v-row class="ma-0">
                 <v-icon style="padding-bottom:2px;" color="blue" size="16">mdi-star</v-icon>
