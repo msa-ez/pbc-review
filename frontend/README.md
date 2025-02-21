@@ -7,7 +7,7 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for web component registration.
@@ -21,11 +21,6 @@ Check the review-app.js file was created in the dist directory
 npm run start
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
 ## How to use web components for other projects
 
 ### Before Using Web Components
@@ -33,11 +28,6 @@ Review backend microservice and review-app Web Component must be running.
 - You must register a review backend microservice with the API gateway that you are currently running.
 ```
 -- Example of API Gateway application.yml
-server:
-  port: 8088
-
----
-
 spring:
   profiles: default
   cloud:
@@ -73,11 +63,17 @@ spring:
 -- index.html
 <head>
     <!-- Vuetify, VueJs -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=roboto:400,500,700" />
+    <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://cdn.jsdelivr.net/npm/vue@latest/dist/vue.esm-browser.js",
+        "vuetify": "https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.esm.js"
+      }
+    }
+    </script>
 </head>
 <body>
     <!-- built Web Components file -->
@@ -105,12 +101,11 @@ Built Web Components can be used as HTML tags.
 
 <script>
 export default {
-    name: "App",
     data: () => ({
         // Review data
         reviewData: {
-            'rating': 5,
-            'content': 'Very Good'
+          itemId: 1,
+          userId: "user1",
         },
         showReviews: true,  // Show registered reviews
         showReviewInput: true,  // Activate review registration UI

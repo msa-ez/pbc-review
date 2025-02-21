@@ -1,48 +1,34 @@
- /*eslint-disable*/
-import Vue from "vue";
+import { createApp } from 'vue';
+import vuetify from './plugins/vuetify';
+import './GlobalStyle.css';
 import App from "./App.vue";
-import vuetify from "./plugins/vuetify";
-import Managing from "./components";
-import router from './router';
-Vue.config.productionTip = false;
-require('./GlobalStyle.css');
+import axios from 'axios';
 
-const axios = require("axios").default;
-// backend host url
-axios.fixUrl = function(path) {
-    const url = `http://localhost:8088${path}`;
-    return url;
-}
+import ReviewReviewCards from './components/ReviewReviewCards.vue';
+import ReviewReview from './components/ReviewReview.vue';
 
-const templateFiles = require.context("./components", true);
-Vue.prototype.$ManagerLists = [];
-templateFiles.keys().forEach(function(tempFiles) {
-  if (!tempFiles.includes("Manager.vue") && tempFiles.includes("vue")) {
-    Vue.prototype.$ManagerLists.push(
-      tempFiles.replace("./", "").replace(".vue", "")
-    );
-  }
-});
-Vue.use(Managing);
-const pluralCaseList = []
-
-pluralCaseList.push( {plural: "reviews/reviews", pascal: "ReviewReview"} )
-
-
-Vue.prototype.$ManagerLists.forEach(function(item, idx) {
-  pluralCaseList.forEach(function(tmp) {
-    if(item.toLowerCase() == tmp.pascal.toLowerCase()) {
-      var obj = {
-        name: item,
-        plural: tmp.plural
-      }
-      Vue.prototype.$ManagerLists[idx] = obj
+axios.fixUrl = function(original) {
+    if (!axios.backend && original.indexOf("/") === 0) {
+        return original;
     }
-  })
-})
 
-new Vue({
-  vuetify,
-  router,
-  render: h => h(App)
-}).$mount("#app");
+    let url = null;
+    try {
+        url = new URL(original);
+    } catch (e) {
+        url = new URL(axios.backend + original);
+    }
+
+    if (!axios.backend) return url.pathname;
+
+    url.hostname = axios.backendUrl.hostname;
+    url.port = axios.backendUrl.port;
+
+    return url.href;
+};
+
+createApp(App)
+    .use(vuetify)
+    .component('review-review-cards', ReviewReviewCards)
+    .component('review-review', ReviewReview)
+    .mount('#app');

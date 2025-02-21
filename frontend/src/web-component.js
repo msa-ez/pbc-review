@@ -1,39 +1,30 @@
-import Vue from 'vue';
-import 'vuetify/dist/vuetify.min.css';
-import Vuetify from "vuetify/lib";
-import Managing from "./components";
+import { createApp, h } from 'vue';
+import vuetify from './plugins/vuetify';
+import './GlobalStyle.css';
+import axios from 'axios';
 
-Vue.config.productionTip = false;
-require('./GlobalStyle.css');
+import ReviewReviewCards from './components/ReviewReviewCards.vue';
+import ReviewReview from './components/ReviewReview.vue';
 
-Vue.use(Managing);
-Vue.use(Vuetify);
-
-const axios = require("axios").default;
-// axios.backend = "";
-// if (axios.backend) axios.backendUrl = new URL(axios.backend);
 axios.fixUrl = function(original) {
-    if(!axios.backend && original.indexOf("/")==0) {
+    if (!axios.backend && original.indexOf("/") === 0) {
         return original;
     }
 
-    var url = null;
-
+    let url = null;
     try {
         url = new URL(original);
-    } catch(e) {
+    } catch (e) {
         url = new URL(axios.backend + original);
     }
 
-    if(!axios.backend) return url.pathname;
+    if (!axios.backend) return url.pathname;
 
     url.hostname = axios.backendUrl.hostname;
     url.port = axios.backendUrl.port;
 
     return url.href;
-}
-
-const vuetify = new Vuetify({});
+};
 
 class WebComponentElement extends HTMLElement {
     constructor() {
@@ -42,39 +33,52 @@ class WebComponentElement extends HTMLElement {
     }
 
     connectedCallback() {
-        var slotContent = "";
-        const props = {};
-        if (this.childNodes.length > 0) {
-            this.childNodes.forEach((child) => {
-                const componentName = child.nodeName.toLowerCase();
-                slotContent += `<${componentName} v-bind="props"></${componentName}>`;
-                if (child.attributes) {
-                    Array.from(child.attributes).forEach(attr => {
-                        try {
-                            props[attr.name] = JSON.parse(attr.value);
-                        } catch (e) {
-                            props[attr.name] = attr.value;
-                        }
-                    })
+        // Map of registered components
+        const componentMap = {
+            'review-review-cards': ReviewReviewCards,
+            'review-review': ReviewReview
+        };
+
+        // Collect child components to render
+        const childComponents = Array.from(this.childNodes)
+            .filter(node => node.nodeType === Node.ELEMENT_NODE)
+            .map(node => {
+                const tagName = node.tagName.toLowerCase();
+                const component = componentMap[tagName];
+                if (component) {
+                    const props = {};
+                    if (node.attributes) {
+                        Array.from(node.attributes).forEach(attr => {
+                            try {
+                                props[attr.name] = JSON.parse(attr.value);
+                            } catch (e) {
+                                props[attr.name] = attr.value;
+                            }
+                        });
+                    }
+
+                    return h(component, { ...props });
+                } else {
+                    console.warn(`Component for tag <${tagName}> not found.`);
+                    return null;
                 }
-            })
-        }
+            }).filter(Boolean);
 
-        this.vueInstance = new Vue({
-            vuetify,
-            data() {
-                return { props };
-            },
-            template: `${slotContent}`,
-        }).$mount();
+        this.vueInstance = createApp({
+            render() {
+                return h('div', childComponents);
+            }
+        });
 
-        this.innerHTML = '';
-        this.appendChild(this.vueInstance.$el);
+        this.vueInstance.use(vuetify);
+        this.vueInstance.component('review-review-cards', ReviewReviewCards);
+        this.vueInstance.component('review-review', ReviewReview);
+        this.vueInstance.mount(this);
     }
 
     disconnectedCallback() {
         if (this.vueInstance) {
-            this.vueInstance.$destroy();
+            this.vueInstance.unmount(); // Correct method to unmount in Vue 3
         }
     }
 }

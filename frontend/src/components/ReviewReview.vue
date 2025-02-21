@@ -3,15 +3,15 @@
         <v-row class="pa-0 ma-0 align-center" v-if="!editMode">
             <v-avatar size="40">
                 <v-img v-if="value.userImg && value.userImg.length > 0" :src="value.userImg"></v-img>
-                <v-img v-else :src="require('@/assets/icon/user.svg')" width="48" height="48" class="mx-auto"></v-img>
+                <v-img v-else :src="defaultUserImg" width="48" height="48" class="mx-auto"></v-img>
             </v-avatar>
             <span class="ml-2">{{ value.userId ? value.userId : '사용자 ID' }}</span>
             <v-spacer></v-spacer>
             <div v-if="editable && !editMode">
-                <v-btn icon text @click="edit">
+                <v-btn icon variant="text" @click="edit">
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon text @click="remove">
+                <v-btn icon variant="text" @click="remove">
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </div>
@@ -21,12 +21,10 @@
         </v-card-title>
 
         <v-card-text class="pa-0">
-            <v-row class="ma-0 pa-0 align-center"
-                :class="editMode ? 'mb-4' : ''"
-            >
+            <v-row class="ma-0 mb-4 pa-0 align-center">
                 <div v-if="editMode">별점 :</div>
                 <v-rating
-                    v-model="value.rating"
+                    v-model="newValue.rating"
                     color="blue"
                     background-color="grey"
                     dense
@@ -35,12 +33,16 @@
                     length="5"
                 ></v-rating>
             </v-row>
-            <String label="리뷰" v-model="value.text" 
-                :editMode="editMode" 
-                :inputUI="'TEXTAREA'" 
-                :showLabel="false"
+            <v-textarea
+                v-model="newValue.text"
+                label="리뷰"
+                :readonly="!editMode"
+                :variant="editMode ? 'outlined' : 'plain'"
                 style="white-space: pre-wrap;"
-            />
+                variant="outlined"
+                auto-grow
+                rows="2"
+            ></v-textarea>
         </v-card-text>
 
         <v-card-actions class="pa-0" v-if="editMode">
@@ -73,10 +75,10 @@
 </template>
 
 <script>
-const axios = require('axios').default;
+import axios from 'axios';
+import userIcon from '@/assets/icon/user.svg';
 
 export default {
-    name: 'ReviewReview',
     props: {
         value: Object,
         isNew: Boolean,
@@ -89,65 +91,49 @@ export default {
             timeout: 5000,
             text: '',
         },
+        newValue: {
+            itemId: '',
+            rating: 0,
+            text: '',
+            userId: '',
+            userImg: '',
+        },
     }),
     computed: {
         id() {
             if (this.value && this.value._links) {
                 return this.value._links.self.href.split("/")[this.value._links.self.href.split("/").length - 1];
+            } else if (this.value.id) {
+                return this.value.id;
             }
             return '';
-        }
+        },
+        defaultUserImg() {
+            return userIcon;
+        },
     },
     created() {
         if (this.isNew) {
             this.editMode = true;
         }
+        this.newValue = this.value;
     },
     methods: {
-        selectFile(){
-            if(this.editMode == false) {
-                return false;
-            }
-            var me = this
-            var input = document.createElement("input");
-            input.type = "file";
-            input.accept = "image/*";
-            input.id = "uploadInput";
-            
-            input.click();
-            input.onchange = function (event) {
-                var file = event.target.files[0]
-                var reader = new FileReader();
-
-                reader.onload = function () {
-                    var result = reader.result;
-                    me.imageUrl = result;
-                    me.value.userImg = result;
-                };
-                reader.readAsDataURL( file );
-            };
-        },
         edit() {
             this.editMode = true;
         },
         async save() {
             try {
-                var temp = null;
-
                 if(this.isNew) {
-                    temp = await axios.post(axios.fixUrl('/reviews'), this.value)
+                    await axios.post(axios.fixUrl('/reviews'), this.newValue)
                 } else {
-                    temp = await axios.put(axios.fixUrl('/reviews/' + this.id), this.value)
-                }
-
-                if(this.value != null) {
-                    for(var k in temp.data) this.value[k]=temp.data[k];
-                } else {
-                    this.value = temp.data;
+                    await axios.put(axios.fixUrl('/reviews/' + this.id), this.newValue)
                 }
 
                 if (this.isNew) {
                     this.$emit('add');
+                    this.newValue.rating = 0;
+                    this.newValue.text = '';
                 } else {
                     this.$emit('edit');
                     this.editMode = false;

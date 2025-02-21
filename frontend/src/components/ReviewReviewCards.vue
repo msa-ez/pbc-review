@@ -13,7 +13,7 @@
                 <div class="text-center mr-8">
                     <div style="font-size:64px; font-weight: 500;">{{ averageRating }}</div>
                     <v-rating
-                        v-model="averageRating"
+                        :model-value="averageRating"
                         color="blue"
                         background-color="grey"
                         dense
@@ -28,7 +28,7 @@
                             <div class="ml-2 mr-2">
                                 <v-progress-linear
                                     style="width:100px;"
-                                    :value="(count / values.length) * 100"
+                                    :model-value="(count / values.length) * 100"
                                     height="5"
                                     color="blue"
                                     rounded
@@ -40,7 +40,7 @@
                 </div>
                 <div class="text-center align-center">
                     <div style="font-size:12px; font-weight: 700;">전체 리뷰수</div>
-                    <v-img :src="require('@/assets/icon/chat.svg')" width="48" height="48" class="mx-auto"></v-img>
+                    <v-img :src="defaultChatImg" width="48" height="48" class="mx-auto"></v-img>
                     <div style="font-size:32px; font-weight: 700;">{{ values.length }}</div>
                 </div>
             </div>
@@ -48,18 +48,19 @@
             <div style="width: 100%;">
                 <div v-if="showReviews">
                     <v-col class="pa-0" v-for="(review, index) in values" :key="index">
-                        <ReviewReview 
+                        <review-review 
                             :isNew="false" 
                             :value="review"
                             :editable="review.userId == userId" 
                             @delete="remove" 
                             @edit="edit" 
-                            class="mx-auto mb-4 mt-4 pa-4" />
+                            class="mx-auto mb-4 mt-4 pa-4"
+                        ></review-review>
                         <v-divider></v-divider>
                     </v-col>
                 </div>
                 <v-col v-if="showReviewInput" class="pa-0 pt-4">
-                    <ReviewReview :isNew="true" v-model="newValue" @add="append" class="mx-auto pa-4" />
+                    <review-review :isNew="true" :value="newValue" @add="append" class="mx-auto pa-4"></review-review>
                 </v-col>
             </div>
         </div>
@@ -67,14 +68,10 @@
 </template>
 
 <script>
-const axios = require('axios').default;
-import ReviewReview from './../ReviewReview.vue';
+import axios from 'axios';
+import chatIcon from '@/assets/icon/chat.svg';
 
 export default {
-    name: 'ReviewReviewCards',
-    components: {
-        ReviewReview,
-    },
     props: {
         value: Object,
         // showReviews 등록된 리뷰 보기,
@@ -116,7 +113,10 @@ export default {
         userId() {
             if (this.value && this.value.userId) return this.value.userId;
             return null
-        }
+        },
+        defaultChatImg() {
+            return chatIcon;
+        },
     },
     created() {
         var me = this;
@@ -162,12 +162,12 @@ export default {
                 'userImg': this.value.userImg || null,
             };
         },
-        remove() {
-            this.getReviewList();
+        async remove() {
+            await this.getReviewList();
             this.calculateAverageRating(); // 데이터 변경 후 평균 계산
         },
-        edit() {
-            this.getReviewList();
+        async edit() {
+            await this.getReviewList();
             this.calculateAverageRating(); // 데이터 변경 후 평균 계산
         },
         calculateAverageRating() {
