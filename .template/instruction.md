@@ -28,14 +28,6 @@ PBC Review 시스템은 모든 리뷰 관련 작업을 효율적이고 안전하
 1. 패널을 닫은 후, CODE를 클릭하여 코드 프리뷰를 통해 이벤트스토밍기반 생성된 코드를 확인합니다.
 <img width="509" alt="image" src="https://github.com/user-attachments/assets/717d6253-1f07-43f7-b949-6bd7350e459b" /> <br>
 
-2. 생성된 코드에서 선택한 PBC 폴더 > README.md를 클릭하여 소스코드 사용방법을 확인합니다.
+2. 생성된 코드에서 선택한 PBC 폴더 > README.md를 클릭하여 소스코드 사용방법을 확인하여 사용할 수 있습니다.
 <img width="998" alt="image" src="https://github.com/user-attachments/assets/699bda6a-7167-4c50-98b4-1afe1ccb1607" /> <br>
 <PBC README.md 파일 예시>
-
-3. IDE환경에서 소스코드를 Load한 후, README를 참고하여 다운로드 > 압축 해제를 진행하여 소스코드에 다운로드 받은 PBC가 생성되었는지 확인합니다.
-<img width="741" alt="image" src="https://github.com/user-attachments/assets/037b4ac3-dc03-4b96-9d83-dd049629d24f" /> <br>
-<PBC 소스코드 다운 예시>
-
-4. port 충돌을 고려해 application.yml(review/src/main/resources/application.yml)의 port를 적절하게 변경합니다.
-<img width="290" alt="image" src="https://github.com/user-attachments/assets/8809f047-3cc4-4e66-932e-9f89f6f8df5b" /> <br>
-<PBC Port 변경 예시>
